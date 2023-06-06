@@ -1,0 +1,89 @@
+{% extends 'cooperative-main.html' %}
+
+{% block content %}
+
+
+<main id="main" class="main">
+
+    {% load static %}
+
+        
+    <div class="pagetitle">
+        <h1>MBUGO FARMERS COOPERATIVE</h1>
+        <P>Register Farmers</P>
+        <!-- <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item">Pages</li>
+                    <li class="breadcrumb-item active">Contact</li>
+                </ol>
+            </nav> -->
+    </div><!-- End Page Title -->
+
+    <section class="section contact">
+
+        <div class="row gy-4 farmer-reg-form">
+            <div class="col-xl-6">
+                <div class="card p-4">
+                    <form action="" method="post" class="email-form">
+                        {% csrf_token %}
+
+                        <h1 class="head-label text-center">Register Farmer</h1>
+                        <div class="row gy-4">
+
+                            <div class="col-md-12">
+                                <input type="text" value= "{{farmer.name}}" name="farmerName" class="form-control" placeholder="Farmer's Name"
+                                    required>
+                            </div>
+
+                            <div class="col-md-12">
+                                <input type="tel" name="phone" class="form-control"
+                                    value="{{farmer.phone}}" placeholder="Phone Number: 0700000000" pattern="[0]{1}[7]{1}[0-9]{8}" required>
+                            </div>
+
+                            <div class="col-md-12">
+                                <select class="form-select" aria-label="Default select example" name="scale" required>
+                                    <option value="">Scale of operation:{{farmer.operation_scale}}</option>
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" name="location" placeholder="Location" value="{{farmer.location}}" required>
+                            </div>
+
+                            <div class="col-md-12 text-center">
+                                <!-- <div class="loading">Loading</div>
+                                    <div class="error-message"></div>
+                                    <div class="sent-message">Farmer. Thank you!</div> -->
+                                <input type="submit" value="Register farmer" name="Register farmer"
+                                    class="btn btn-success">
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main><!-- End #main -->
+
+<!-- <script>
+    function validateForm() {
+      var selectedValue = document.getElementById('scale').value;
+
+      // Check if the selected value is empty
+      if (selectedValue === '') {
+        alert('Please select an option');
+        return false; // Prevent form submission
+      }
+    }
+  </script> -->
+
+{% endblock %}

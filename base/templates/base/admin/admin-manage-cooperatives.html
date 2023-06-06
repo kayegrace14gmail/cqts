@@ -1,0 +1,116 @@
+{% extends "admin-main.html" %}
+
+
+{% block content %}
+<style>
+    #message-container {
+   position: relative;
+   transition: opacity 1s, transform 1s;
+ }
+ 
+ .fade-out {
+   opacity: 0;
+   transform: translateY(-100%);
+ }
+ </style>
+
+
+    <main id="main" class="main">
+        {% load static %}
+
+
+        {% if messages %}
+        <div class="container" id="message-container">
+            <div class="row">
+                <div class="col-md-12">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="pagetitle">
+            <h1>CQTS Admin</h1>
+            <p>Cooperatives</p>
+            <a href="{% url 'admin-cooperative-registration' %}" class="btn btn-warning">Register cooperative</a>
+            <br>
+            <br>
+            <h5 class="text-primary inform-expand" id="inform-expand">Click on <i class="bi bi-list"></i> above to enlarge table</h5>
+        </div><!-- End Page Title -->
+
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="datatable-wrapper">
+                                <!-- Table with stripped rows -->
+                                <table class="table datatable table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">District_Subcounty</th>
+                                            <th scope="col">Tel</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Date joined</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for cooperative in Cooperatives %}
+                                        <tr>
+                                            <td scope="row">{{ cooperative.name }}</td>
+                                            <td>{{ cooperative.location }}</td>
+                                            <td>{{ cooperative.phone }}</td>
+                                            <td>{{ cooperative.email }}</td>
+                                            <td>{{ cooperative.created_at.date }}</td>
+                                            <td>
+                                                <a href=" {% url 'admin-delete-cooperative' cooperative.id %} " title="Delete" class="btn btn-sm btn-danger"><i
+                                                        class="bi bi-trash-fill"></i></a>
+                                                <a href="#" title="Edit" class="btn btn-sm btn-success"><i
+                                                        class="bi bi-pencil-square"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- End Table with stripped rows -->
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main><!-- End #main -->
+
+    <script>
+
+        // Get the reference to the div element
+        var divElement = document.getElementById("message-container");
+    
+        // Function to remove the div from the DOM
+        function removeDiv() {
+            divElement.parentNode.removeChild(divElement);
+        }
+    
+        // Add the 'removeDiv' function as an event listener for 'transitionend' event
+        divElement.addEventListener("transitionend", removeDiv);
+    
+        // Trigger the fade-out effect after a short delay
+        setTimeout(function () {
+            divElement.classList.add("fade-out");
+        }, 2000); // Delay of 2 second (2000 milliseconds)
+    
+    </script>
+
+    {% endblock %}

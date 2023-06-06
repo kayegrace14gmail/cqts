@@ -1,0 +1,110 @@
+{% extends 'cooperative-main.html' %}
+
+{% block content %}
+<style>
+    #message-container {
+   position: relative;
+   transition: opacity 1s, transform 1s;
+ }
+ 
+ .fade-out {
+   opacity: 0;
+   transform: translateY(-100%);
+ }
+ </style>
+
+<main id="main" class="main">
+    {% load static %}
+
+    {% if messages %}
+    <div class="container" id="message-container">
+        <div class="row">
+            <div class="col-md-12">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="pagetitle">
+        <h1>{{request.user}}</h1>
+        <br>
+        <a href="{% url 'cooperative-farmer-registration' %}" class="btn btn-warning">Register Farmer</a>
+        <br>
+        <br>
+        <h5 class="text-primary inform-expand" id="inform-expand">Click on <i class="bi bi-list"></i> above to enlarge
+            table</h5>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+
+                        <!-- Table with stripped rows -->
+                        <table class="table datatable table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">Phone Number</th>
+                                    <th scope="col">Date joined</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for farmer in farmers %}
+                                <tr>
+                                    <td scope="row"> {{ farmer.name }} </td>
+                                    <td> {{ farmer.location }} </td>
+                                    <td> {{ farmer.phone }} </td>
+                                    <td>{{ farmer.created_at.date }}</td>
+                                    <td>
+                                        <a href="{% url 'cooperative-delete-farmer' farmer.id %}" title="Delete" class="btn btn-sm btn-danger"><i
+                                                class="bi bi-trash-fill"></i></a>
+                                        <a href="{% url 'cooperative-update-farmer' farmer.id %}" title="Edit" class="btn btn-sm btn-success"><i
+                                                class="bi bi-pencil-square"></i></a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                        <!-- End Table with stripped rows -->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+<script>
+
+    // Get the reference to the div element
+    var divElement = document.getElementById("message-container");
+
+    // Function to remove the div from the DOM
+    function removeDiv() {
+        divElement.parentNode.removeChild(divElement);
+    }
+
+    // Add the 'removeDiv' function as an event listener for 'transitionend' event
+    divElement.addEventListener("transitionend", removeDiv);
+
+    // Trigger the fade-out effect after a short delay
+    setTimeout(function () {
+        divElement.classList.add("fade-out");
+    }, 2000); // Delay of 2 second (2000 milliseconds)
+
+</script>
+
+{% endblock %}
