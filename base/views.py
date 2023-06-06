@@ -215,7 +215,7 @@ def adminCooperativesRegistration(request):
         cooperative.cooperative_details.add(details)
 
         #send email to cooperative
-        send_email(coperative_name, email, password)
+        send_email('cooperative',coperative_name, email, password)
         messages.success(request, "Cooperative registered successfully and email sent.")
         return redirect('admin-manage-cooperatives')
     return render(request, 'base/admin/admin-cooperative-registration.html')
@@ -279,7 +279,7 @@ def adminExportersRegistration(request):
         exporter.exporter_details.add(details)
 
         #send email to cooperative
-        # send_email(coperative_name, email, password)
+        send_email('exporter', exporter_name, email, password)
         messages.success(request, "Cooperative registered successfully and email sent.")
         return redirect('admin-manage-exporters')
     return render(request, 'base/admin/admin-exporter-registration.html')
@@ -289,17 +289,18 @@ def adminExportersRegistration(request):
 
 
 #email sending
-def send_email(name, email, password):
+def send_email(account_type, name, email, password):
     subject = 'Welcome to the CQTS Platform'
     recipient_list = [email]  # Replace with the recipient's email address
     
     # Render the HTML template
     context = {
+        'type' : account_type,
         'name': name,  
         'email': email,
         'password': password
     }
-    html_message = render_to_string('base/registration/cooperative_registration_email_template.html', context)
+    html_message = render_to_string('base/registration/account_registration_email_template.html', context)
     
     # Create the plain text version of the message
     plain_message = strip_tags(html_message)

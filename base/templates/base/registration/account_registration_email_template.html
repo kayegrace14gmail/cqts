@@ -12,13 +12,25 @@
 <body>
     <h1>Welcome to the CQTS System!</h1>
     <p>Dear {{ name }},</p>
-    <p>Your account has been successfully registered in the CQTS system by an administrator.</p>
+    <p>Your {{ type }} account has been successfully registered in the CQTS system by an administrator.</p>
     
     <h2>Account Details:</h2>
     <p><strong>Email:</strong> {{ email }}</p>
     <p><strong>Password:</strong> {{ password }}</p>
     
     <p>Please keep your  password confidential and do not share them with anyone.</p>
+
+    <p>You can later reset your password</p>
+
+    {% if type == 'cooperative' %}
+    
+    <p> Click <a href="{% url 'cooperative-login' %}">here</a> to login</p>
+
+    {% elif type == 'exporter' %}
+
+    <p>Login using the cqts moblie app</p>
+
+    {% endif %}
     
     <p>If you have any questions or need assistance, please feel free to contact our support team.</p>
 
