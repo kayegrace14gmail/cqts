@@ -43,13 +43,14 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = 'base.User'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', # CORS
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware', 
 ]
 
 ROOT_URLCONF = 'CQTS.urls'
@@ -67,6 +68,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'rest_framework',
+                'corsheaders',
             ],
         },
     },
@@ -157,4 +160,6 @@ EMAIL_HOST_USER = 'kayegrace14@gmail.com'  # Replace with your Gmail address
 EMAIL_HOST_PASSWORD = 'abexcldqrjchfkni'  # Replace with your Gmail password
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+CORS_ALLOW_ALL_ORIGINS: True
 
