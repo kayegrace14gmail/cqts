@@ -36,7 +36,7 @@
         <div class="pagetitle">
             <h1>CQTS Admin</h1>
             <p>Cooperatives</p>
-            <a href="{% url 'admin-cooperative-registration' %}" class="btn btn-warning">Register cooperative</a>
+            <a href="{% url 'admin-cooperative-registration' %}" class="btn btn-danger">Register cooperative</a>
             <br>
             <br>
             <h5 class="text-primary inform-expand" id="inform-expand">Click on <i class="bi bi-list"></i> above to enlarge table</h5>
@@ -71,9 +71,9 @@
                                             <td>{{ cooperative.email }}</td>
                                             <td>{{ cooperative.created_at.date }}</td>
                                             <td>
-                                                <a href=" {% url 'admin-delete-cooperative' cooperative.id %} " title="Delete" class="btn btn-sm btn-danger"><i
+                                                <a href=" {% url 'admin-delete-cooperative' cooperative.id %} " title="Delete" class="h5 text-danger"><i
                                                         class="bi bi-trash-fill"></i></a>
-                                                <a href="#" title="Edit" class="btn btn-sm btn-success"><i
+                                                <a href="#" title="Edit" class="h5 text-success"><i
                                                         class="bi bi-pencil-square"></i></a>
                                             </td>
                                         </tr>

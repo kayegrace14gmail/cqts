@@ -67,9 +67,9 @@
                                     <td> {{ farmer.phone }} </td>
                                     <td>{{ farmer.created_at.date }}</td>
                                     <td>
-                                        <a href="{% url 'cooperative-delete-farmer' farmer.id %}" title="Delete" class="btn btn-sm btn-danger"><i
+                                        <a href="{% url 'cooperative-delete-farmer' farmer.id %}" title="Delete" class="h5 text-danger"><i
                                                 class="bi bi-trash-fill"></i></a>
-                                        <a href="{% url 'cooperative-update-farmer' farmer.id %}" title="Edit" class="btn btn-sm btn-success"><i
+                                        <a href="{% url 'cooperative-update-farmer' farmer.id %}" title="Edit" class="h5 text-success"><i
                                                 class="bi bi-pencil-square"></i></a>
                                     </td>
                                 </tr>
@@ -87,24 +87,5 @@
     </section>
 
 </main><!-- End #main -->
-<script>
-
-    // Get the reference to the div element
-    var divElement = document.getElementById("message-container");
-
-    // Function to remove the div from the DOM
-    function removeDiv() {
-        divElement.parentNode.removeChild(divElement);
-    }
-
-    // Add the 'removeDiv' function as an event listener for 'transitionend' event
-    divElement.addEventListener("transitionend", removeDiv);
-
-    // Trigger the fade-out effect after a short delay
-    setTimeout(function () {
-        divElement.classList.add("fade-out");
-    }, 2000); // Delay of 2 second (2000 milliseconds)
-
-</script>
 
 {% endblock %}

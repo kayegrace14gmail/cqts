@@ -10,6 +10,7 @@ from django.utils.html import strip_tags
 from CQTS import settings
 from django.contrib.auth.models import Group
 from django.contrib.auth.hashers import make_password
+from django.http import HttpResponse
 
 
 today = date.today()
@@ -140,11 +141,18 @@ def cooperativeLogout(request):
     return redirect('cooperative-login')
 
 
-
 #admnin views
 @login_required(login_url='admin-login')
 def adminHome(request):
-    return render(request, 'base/admin/admin-home.html')
+    farmers = Farmer.objects.all()
+    cooperatives = User.objects.filter(group_id__name = 'Cooperative')
+    exporters = User.objects.filter(group_id__name = 'Exporter')
+    context = {
+        'farmers' : farmers,
+        'cooperatives' :  cooperatives,
+        'exporters' : exporters,
+    }
+    return render(request, 'base/admin/admin-home.html', context)
 
 #Login admin
 def adminLogin(request):
@@ -158,8 +166,7 @@ def adminLogin(request):
         #check if user belongs to admin group---> if not, redirect to login page
        try:
             user = User.objects.get(email = email)
-            group = user.group.name
-            
+            group  = user.group.name
        except:
             messages.error(request, "Email or password is incorrect.")
             return redirect('admin-login')
@@ -266,7 +273,7 @@ def adminExportersRegistration(request):
         )
         except:
             messages.error(request, "Email already exists.")
-            return redirect('admin-cooperative-registration')
+            return redirect('admin-exporter-registration')
         #add user to cooperative group
         group = Group.objects.get(name='Exporter')
         group.group_user.add(exporter)
