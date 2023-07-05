@@ -11,6 +11,8 @@ from CQTS import settings
 from django.contrib.auth.models import Group
 from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse
+import requests
+from bs4 import BeautifulSoup
 
 
 today = date.today()
@@ -26,30 +28,51 @@ def home(request):
 
 @login_required(login_url='cooperative-login')
 def cooperativeHome(request):
-    # period = request.GET.get('period') if request.GET.get('period') != None else 'Today'
-    # if period == 'Today':
-    #     start_of_day = datetime.combine(today, datetime.min.time())
-    #     end_of_day = datetime.combine(today, datetime.max.time())
-    #     accepted_batches = Batch.objects.filter(cooperative = request.user, is_approved = True, created_at__range=(start_of_day, end_of_day)).count()
-    #     rejected_batches = Batch.objects.filter(cooperative = request.user, is_approved = False, created_at__range=(start_of_day, end_of_day)).count()
+    # fetching prices from the web
+    url = 'https://ugandacoffee.go.ug/'
 
-    # elif period == 'Week':
-    #     start_of_week = today - timedelta(days=today.weekday())
-    #     end_of_week = start_of_week + timedelta(days=6)
-    #     accepted_batches = Batch.objects.filter(cooperative = request.user, is_approved = True, created_at__range=(start_of_week, end_of_week)).count()
-    #     rejected_batches = Batch.objects.filter(cooperative = request.user, is_approved = False, created_at__range=(start_of_week, end_of_week)).count()
+    # Send a GET request to the URL
+    response = requests.get(url)
 
-    # elif period == 'Month':
-    #     pass
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Parse the HTML content using BeautifulSoup
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # Find all divs with class 'price-table'
+        price_table = soup.find_all('div', {'class': 'price-table'})
+
+        prices = {}
+
+        if price_table:
+            # Find all divs with class 'tab-row'
+            for table in price_table:
+                tab_rows = table.find_all('div', {'class': 'tab-row'})
+                for tab_row in tab_rows:
+                    label = tab_row.find('div', {'class': 'lable'}).text.strip()
+                    price = tab_row.find('div', {'class': 'price-data'}).text.strip()
+                    prices[label] = price
+        # Print the prices 
+        # print("Type: US Cents/Lb")
+        # for key, value in prices.items():
+        #     if key == "Kiboko":
+        #         print("Type: Shillings/Kg")
+        #     print(f"{key}: {value}")
+    cooperative_details = Cooperative.objects.get(cooperative=request.user)
     farmers = Farmer.objects.filter(cooperative=request.user).count()
     accepted_batches = Batch.objects.filter(
         cooperative=request.user, is_approved=True).count()
     rejected_batches = Batch.objects.filter(
         cooperative=request.user, is_approved=False).count()
 
-    context = {'accepted_batches': accepted_batches,
+    context = {
+                'accepted_batches': accepted_batches,
                'rejected_batches': rejected_batches,
-               'farmers': farmers, }
+               'farmers': farmers,
+                'prices': prices,
+                'cooperative_details': cooperative_details
+               } 
+
     return render(request, 'base/cooperative/cooperative-home.html', context)
 
 
@@ -85,11 +108,13 @@ def cooperativeLogin(request):
     context = {}
     return render(request, 'base/cooperative/cooperative-login.html', context)
 
+
 @login_required(login_url='cooperative-login')
 def cooperativeBatchView(request):
     batches = Batch.objects.filter(cooperative=request.user)
     context = {'batches': batches}
-    return render(request, 'base/cooperative/cooperative-view-batches.html', context)   
+    return render(request, 'base/cooperative/cooperative-view-batches.html', context)
+
 
 @login_required(login_url='cooperative-login')
 def farmerRegistration(request):
@@ -164,155 +189,156 @@ def adminHome(request):
     buyers = User.objects.filter(group_id__name='Buyer').count()
     accepted_batches = Batch.objects.filter(is_approved=True).count()
     rejected_batches = Batch.objects.filter(is_approved=False).count()
-   
+
     districts = {
-    "Central Region": [
-        "Buikwe",
-        "Bukomansimbi",
-        "Butambala",
-        "Buvuma",
-        "Gomba",
-        "Kalangala",
-        "Kalungu",
-        "Kampala",
-        "Kasanda",
-        "Kayunga",
-        "Kiboga",
-        "Kyankwanzi",
-        "Kyotera",
-        "Luweero",
-        "Lwengo",
-        "Lyantonde",
-        "Masaka",
-        "Mityana",
-        "Mpigi",
-        "Mubende",
-        "Mukono",
-        "Nakaseke",
-        "Nakasongola",
-        "Rakai",
-        "Sembabule",
-        "Wakiso"
-    ],
-    "Eastern Region": [
-        "Amuria",
-        "Kapelebyong",
-        "Budaka",
-        "Bududa",
-        "Bugiri",
-        "Bugweri",
-        "Bukedea",
-        "Bukwa",
-        "Bulambuli",
-        "Busia",
-        "Butaleja",
-        "Butebo",
-        "Buyende",
-        "Iganga",
-        "Jinja",
-        "Kaberamaido",
-        "Kalaki",
-        "Kaliro",
-        "Kamuli",
-        "Kapchorwa",
-        "Katakwi",
-        "Kibuku",
-        "Kumi",
-        "Manafwa",
-        "Namisindwa",
-        "Mayuge",
-        "Mbale",
-        "Namayingo",
-        "Namutumba",
-        "Ngora",
-        "Pallisa",
-        "Butebo",
-        "Serere",
-        "Sironko",
-        "Soroti",
-        "Tororo"
-    ],"Northern Region": [
-        "Abim",
-        "Adjumani",
-        "Agago",
-        "Alebtong",
-        "Amolatar",
-        "Amudat",
-        "Amuru",
-        "Apac",
-        "Kwania"
-        "Arua",
-        "Terego",
-        "Madi-Okollo",
-        "Dokolo",
-        "Gulu",
-        "Omoro",
-        "Kaabong",
-        "Karenga",
-        "Kitgum",
-        "Koboko",
-        "Kole",
-        "Kotido",
-        "Lamwo",
-        "Lira",
-        "Maracha",
-        "Moroto",
-        "Moyo",
-        "Obongi",
-        "Nakapiripirit",
-        "Nabilatuk",
-        "Napak",
-        "Nebbi",
-        "Packwach",
-        "Nwoya",
-        "Otuke",
-        "Oyam",
-        "Pader",
-        "Yumbe",
-        "Zombo"
-    ],
-    "Western Region": [
-        "Buhweju",
-        "Buliisa",
-        "Bundibugyo",
-        "Bushenyi",
-        "Hoima",
-        "Kikuube",	
-        "Ibanda",
-        "Isingiro",
-        "Kabale",
-        "Rubanda",
-        "Kabarole",
-        "Bunyangabu",
-        "Kamwenge",
-        "Kitagwenda"
-        "Kanungu",
-        "Kasese",
-        "Kibaale",
-        "Kakumiro",
-        "Kagadi",
-        "Kiruhura",
-        "Kazo",
-        "Kiryandongo",
-        "Kisoro",
-        "Kyegegwa",
-        "Kyenjojo",
-        "Masindi",
-        "Mbarara",
-        "Rwampara",
-        "Mitooma",
-        "Ntoroko",
-        "Ntungamo",
-        "Rubirizi",
-        "Rukiga",
-        "Rukungiri",
-        "Sheema"
-    ]
-}
+        "Central Region": [
+            "Buikwe",
+            "Bukomansimbi",
+            "Butambala",
+            "Buvuma",
+            "Gomba",
+            "Kalangala",
+            "Kalungu",
+            "Kampala",
+            "Kasanda",
+            "Kayunga",
+            "Kiboga",
+            "Kyankwanzi",
+            "Kyotera",
+            "Luweero",
+            "Lwengo",
+            "Lyantonde",
+            "Masaka",
+            "Mityana",
+            "Mpigi",
+            "Mubende",
+            "Mukono",
+            "Nakaseke",
+            "Nakasongola",
+            "Rakai",
+            "Sembabule",
+            "Wakiso"
+        ],
+        "Eastern Region": [
+            "Amuria",
+            "Kapelebyong",
+            "Budaka",
+            "Bududa",
+            "Bugiri",
+            "Bugweri",
+            "Bukedea",
+            "Bukwa",
+            "Bulambuli",
+            "Busia",
+            "Butaleja",
+            "Butebo",
+            "Buyende",
+            "Iganga",
+            "Jinja",
+            "Kaberamaido",
+            "Kalaki",
+            "Kaliro",
+            "Kamuli",
+            "Kapchorwa",
+            "Katakwi",
+            "Kibuku",
+            "Kumi",
+            "Manafwa",
+            "Namisindwa",
+            "Mayuge",
+            "Mbale",
+            "Namayingo",
+            "Namutumba",
+            "Ngora",
+            "Pallisa",
+            "Butebo",
+            "Serere",
+            "Sironko",
+            "Soroti",
+            "Tororo"
+        ], "Northern Region": [
+            "Abim",
+            "Adjumani",
+            "Agago",
+            "Alebtong",
+            "Amolatar",
+            "Amudat",
+            "Amuru",
+            "Apac",
+            "Kwania"
+            "Arua",
+            "Terego",
+            "Madi-Okollo",
+            "Dokolo",
+            "Gulu",
+            "Omoro",
+            "Kaabong",
+            "Karenga",
+            "Kitgum",
+            "Koboko",
+            "Kole",
+            "Kotido",
+            "Lamwo",
+            "Lira",
+            "Maracha",
+            "Moroto",
+            "Moyo",
+            "Obongi",
+            "Nakapiripirit",
+            "Nabilatuk",
+            "Napak",
+            "Nebbi",
+            "Packwach",
+            "Nwoya",
+            "Otuke",
+            "Oyam",
+            "Pader",
+            "Yumbe",
+            "Zombo"
+        ],
+        "Western Region": [
+            "Buhweju",
+            "Buliisa",
+            "Bundibugyo",
+            "Bushenyi",
+            "Hoima",
+            "Kikuube",
+            "Ibanda",
+            "Isingiro",
+            "Kabale",
+            "Rubanda",
+            "Kabarole",
+            "Bunyangabu",
+            "Kamwenge",
+            "Kitagwenda"
+            "Kanungu",
+            "Kasese",
+            "Kibaale",
+            "Kakumiro",
+            "Kagadi",
+            "Kiruhura",
+            "Kazo",
+            "Kiryandongo",
+            "Kisoro",
+            "Kyegegwa",
+            "Kyenjojo",
+            "Masindi",
+            "Mbarara",
+            "Rwampara",
+            "Mitooma",
+            "Ntoroko",
+            "Ntungamo",
+            "Rubirizi",
+            "Rukiga",
+            "Rukungiri",
+            "Sheema"
+        ]
+    }
     if request.method == 'POST':
         district = request.POST.get('district')
         if district:
-            district_cooperatives = User.objects.filter(location__icontains=district, group__name='Cooperative').count()
+            district_cooperatives = User.objects.filter(
+                location__icontains=district, group__name='Cooperative').count()
             context = {
                 'farmers': farmers,
                 'cooperatives':  cooperatives,
@@ -481,12 +507,15 @@ def adminExportersRegistration(request):
         return redirect('admin-manage-exporters')
     return render(request, 'base/admin/admin-exporter-registration.html')
 
+
 def adminBatchView(request):
     batches = Batch.objects.all()
     context = {'batches': batches}
     return render(request, 'base/admin/admin-view-batches.html', context)
 
 # email sending
+
+
 def send_email(account_type, name, email, password):
     subject = 'Welcome to the CQTS Platform'
     recipient_list = [email]  # Replace with the recipient's email address
