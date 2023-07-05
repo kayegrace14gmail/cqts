@@ -103,8 +103,6 @@ class Exporter(models.Model):
         return self.exporter + ' - ' + self.license
 
 # cooperatives
-
-
 class Cooperative(models.Model):
     cooperative_head = models.CharField(max_length=200, null=False)
     cooperative = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={
@@ -117,7 +115,6 @@ class Cooperative(models.Model):
 
     def __str__(self):
         return self.cooperative.name + ' - ' + self.cooperative_head
-
 
 class Batch(models.Model):
     type = models.CharField(max_length=200, null=False,
@@ -135,16 +132,17 @@ class Batch(models.Model):
     # flags for batch status
     is_approved = models.BooleanField(default=False)
     sold_to_exporter = models.BooleanField(default=False)
+    date_sold_to_exporter = models.DateField(null=True, blank=True)
     sold_to_buyer = models.BooleanField(default=False)
+    date_sold_to_buyer = models.DateField(null=True, blank=True)
+    date_sold_to_exporter = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    batch_string = models.CharField(max_length=200, null=True, blank=True)
     def __str__(self):
         return 'CQTS-Batch ' + str(self.id)
-
     class Meta:
         ordering = ('-updated_at', '-created_at')
-
 
 # create or get the user groups and assign them permissions
 # @receiver(post_migrate)

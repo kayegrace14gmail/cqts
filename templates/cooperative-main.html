@@ -294,7 +294,7 @@
             <li class="nav-heading">Batches</li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#">
+                <a class="nav-link collapsed" href="{% url 'cooperative-view-batches'%}">
                     <i class="ri-apps-fill"></i>
                     <span>View Batches</span>
                 </a>
@@ -322,11 +322,10 @@
     <!-- ======= Main Section ======= -->
     {% block content %}
     
-    
     {% endblock %}
 
     <!-- ======= Footer ======= -->
-    <footer id="footer" class="footer">
+    <footer id="footer" class="footer mt-5">
         <div class="copyright">
             &copy; Copyright <strong><span>CQTS 2023</span></strong>
         </div>

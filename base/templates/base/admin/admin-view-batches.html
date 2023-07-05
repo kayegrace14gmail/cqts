@@ -1,0 +1,66 @@
+{% extends "admin-main.html" %}
+
+
+{% block content %}
+<main id="main" class="main">
+    {% load static %}
+
+    <div class="pagetitle">
+        <h1>CQTS Admin</h1>
+        <p>Batches</p>
+        <br>
+        <br>
+        <h5 class="text-primary inform-expand" id="inform-expand">Click on <i class="bi bi-list"></i> above to enlarge
+            table</h5>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="datatable-wrapper">
+                    <!-- Table with stripped rows -->
+                    <table class="table datatable table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Batch_id</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Grade</th>
+                                <th scope="col">Color</th>
+                                <th scope="col">Cooperative</th>
+                                <th scope="col">Approved</th>
+                                <th scope="col">Exporter</th>
+                                <th scope="col">Sold_to_exporter</th>
+                                <th scope="col">Date_sold_to_exporter</th>
+                                <th scope="col">Buyer</th>
+                                <th scope="col">Sold_to_Buyer</th>
+                                <th scope="col">Date_sold_to_buyer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for batch in batches %}
+                            <tr style="color: red !important;">
+                                <td scope="row">{{batch}}</td>
+                                <td>{{batch.type}}</td>
+                                <td>{{batch.grade}}</td>
+                                <td>{{batch.color}}</td>
+                                <td>{{batch.cooperative.name}}</td>
+                                <td>{{batch.is_approved}}</td>
+                                <td>{{batch.exporter}}</td>
+                                <td>{{batch.sold_to_exporter}}</td>
+                                <td>{{batch.date_sold_to_exporter}}</td>
+                                <td>{{batch.buyer}}</td>
+                                <td>{{batch.sold_to_buyer}}</td>
+                                <td>{{batch.date_sold_to_buyer}}</td>
+                            </tr>
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+</main><!-- End #main -->
+{% endblock %}

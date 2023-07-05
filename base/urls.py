@@ -11,6 +11,7 @@ urlpatterns = [
     path('admin-cooperative-registration', views.adminCooperativesRegistration, name='admin-cooperative-registration'),
     path('admin-exporter-registration', views.adminExportersRegistration, name='admin-exporter-registration'),
     path('admin-manage-exporters', views.adminExportersView, name='admin-manage-exporters'),
+    path('admin-view-batches', views.adminBatchView, name='admin-view-batches'),
     path('cooperative-deletion/<str:pk>/', views.cooperativeDeletion, name = 'admin-delete-cooperative'),
     path('cooperative-login', views.cooperativeLogin, name='cooperative-login'),
     path('cooperative-home', views.cooperativeHome, name='cooperative-home'),
@@ -18,7 +19,7 @@ urlpatterns = [
     path('cooperative-manage-farmers', views.cooperativeFarmersView, name='cooperative-manage-farmers'),
     path('farmer-deletion/<str:pk>/', views.farmerDeletion, name = 'cooperative-delete-farmer'),
     path('farmer-update/<str:pk>/', views.farmerUpdate, name = 'cooperative-update-farmer'),
-
+    path('cooperative-view-batches', views.cooperativeBatchView, name='cooperative-view-batches'),
 
     path('logout/', views.cooperativeLogout, name='logout'),
     path('logout-admin/', views.adminLogout, name='logout-admin'),
