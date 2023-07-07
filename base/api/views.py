@@ -38,13 +38,17 @@ class ClassificationResult(BaseModel):
     predicted_probability: float
 
 
-@api_view(['GET', 'PUT', 'POST'])
+@api_view(['GET'])
 def getRoutes(request):
     routes = [
         'GET /api',
-        'GET /api/cooperatives',
-        'GET /api/exporters',
-        'GET /api/buyers'
+        'POST /api/login/',
+        'POST /api/register-batch/',
+        'POST /api/register-buyer/',
+        'GET /api/get-batch/<str:batch_string>/',
+        'PUT /api/batch-exporter-update/',
+        'PUT /api/batch-buyer-update/',
+        'POST /api/logout/',
     ]
 
     return Response(routes)
@@ -70,7 +74,14 @@ def user_login(request):
             group = user.group.name
             if(group == 'Cooperative' or group == 'Exporter' or group == 'Buyer'):
                 login(request, user)
-                return Response({'message': 'Login successful.', 'group': group}, status=status.HTTP_200_OK)
+                #return a messge and the user details
+                response = {
+                    'id': user.id,
+                    'email': user.email,
+                    'group': group,
+                    'name' : user.name,
+                }
+                return Response(response, status=status.HTTP_200_OK)
             else:
                 return Response({'message': 'Not allowed here'}, status=status.HTTP_401_UNAUTHORIZED)
     return Response({'message': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
