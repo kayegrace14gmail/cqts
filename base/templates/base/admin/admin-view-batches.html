@@ -44,7 +44,12 @@
                                 <td>{{batch.grade}}</td>
                                 <td>{{batch.color}}</td>
                                 <td>{{batch.cooperative.name}}</td>
-                                <td>{{batch.is_approved}}</td>
+                                {% if batch.is_approved == True %}
+                                <td><i class="bi bi-check text-success text-center fs-3" style="text-align: center;"></i></td>
+                                {% else %}
+                                <td><i class="bi bi-x text-danger text-center fs-3"></i></td>
+                                {% endif %}
+                                <!-- <td>{{batch.is_approved}}</td> -->
                                 <td>{{batch.exporter}}</td>
                                 <td>{{batch.sold_to_exporter}}</td>
                                 <td>{{batch.date_sold_to_exporter}}</td>

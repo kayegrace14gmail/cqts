@@ -53,7 +53,7 @@ class User(AbstractUser):
     name = models.CharField(max_length=200, null=True)
     username = None
     phone = models.CharField(max_length=200, null=True)
-    about = models.TextField(null=True, blank=True)
+    # about = models.TextField(null=True, blank=True)
     location = models.CharField(max_length=200, null=True)
     group = models.ForeignKey(
         Group, on_delete=models.CASCADE, null=True, blank=True, related_name='group_user')

@@ -1,0 +1,2 @@
+curl -X POST -H "Content-Type: application/json" -d '{"email": "buyer@cqts.com", "password": "cqts@1234", "name": "Kaye Buyer", "phone": "0778888888", "location": "England"}' localhost:8000/api/register-buyer/
+curl -X POST -H "Content-Type: application/json" -d '{ "email": "buyer@cqts.com", "password": "cqts@1234", "name": "Kaye Buyer", "phone": "0778888888", "location": "England" }' localhost:8000/api/register-buyer/
