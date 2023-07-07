@@ -145,7 +145,7 @@ class Batch(models.Model):
         ordering = ('-updated_at', '-created_at')
 
 # create or get the user groups and assign them permissions
-# @receiver(post_migrate)
+# @receiver(post  _migrate)
 # def insert_auth_groups(sender, **kwargs):
 #     if sender.name == 'auth' and kwargs['created']:
 #         # Insert data into auth_group table

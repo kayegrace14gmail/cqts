@@ -1,4 +1,3 @@
-
 import os
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -43,6 +42,7 @@ def getRoutes(request):
     routes = [
         'GET /api',
         'POST /api/login/',
+        'POST /api/get-user/',
         'POST /api/register-batch/',
         'POST /api/register-buyer/',
         'GET /api/get-batch/<str:batch_string>/',
@@ -85,6 +85,13 @@ def user_login(request):
             else:
                 return Response({'message': 'Not allowed here'}, status=status.HTTP_401_UNAUTHORIZED)
     return Response({'message': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+def get_user(request):
+    user = User.objects.get(email=request.data.get('email'))
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 def logout_user(request):
