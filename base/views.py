@@ -207,6 +207,9 @@ def cooperativeLogout(request):
 # admnin views
 @login_required(login_url='admin-login')
 def adminHome(request):
+    if request.user.group.name != 'CQTSadmin':
+        messages.error(request, "Not an admin account.")
+        return redirect('admin-login')
     farmers = Farmer.objects.all().count()
     cooperatives = User.objects.filter(group_id__name='Cooperative').count()
     exporters = User.objects.filter(group_id__name='Exporter').count()
@@ -391,7 +394,11 @@ def adminHome(request):
 
 def adminLogin(request):
     if request.user.is_authenticated:
-        return redirect('admin-home')
+        if request.user.group.name == 'CQTSadmin':
+            return redirect('admin-home')
+        else:
+            messages.error(request, "Not admin Account.")
+            return redirect('admin-login')
 
     if request.method == 'POST':
         email = request.POST.get('email').lower()
@@ -421,7 +428,16 @@ def adminLogin(request):
     return render(request, 'base/admin/admin-login.html', context)
 
 
+@login_required(login_url='admin-login')
 def adminCooperativesRegistration(request):
+    if request.user.is_authenticated:
+        if request.user.group.name != 'CQTSadmin':
+            messages.error(request, "Not admin Account.")
+            return redirect('admin-login')
+    if request.user.is_authenticated:
+        if request.user.group.name != 'CQTSadmin':
+            messages.error(request, "Not admin Account.")
+            return redirect('admin-login')
     if request.method == 'POST':
         coperative_name = request.POST.get('cooperative_name')
         location = request.POST.get('location')
@@ -462,19 +478,28 @@ def adminCooperativesRegistration(request):
         return redirect('admin-manage-cooperatives')
     return render(request, 'base/admin/admin-cooperative-registration.html')
 
-
+@login_required(login_url='admin-login')
 def adminCooperativesView(request):
+    if request.user.is_authenticated:
+        if request.user.group.name != 'CQTSadmin':
+            messages.error(request, "Not admin Account.")
+            return redirect('admin-login')
     Cooperatives = User.objects.filter(group__name='Cooperative')
     context = {'Cooperatives': Cooperatives}
     return render(request, 'base/admin/admin-manage-cooperatives.html', context)
 
-
+@login_required(login_url='admin-login')
 def adminExportersView(request):
+    if request.user.is_authenticated:
+        if request.user.group.name != 'CQTSadmin':
+            messages.error(request, "Not admin Account.")
+            return redirect('admin-login')
     Exporters = Exporter.objects.all()
     context = {'Exporters': Exporters}
     return render(request, 'base/admin/admin-manage-exporters.html', context)
 
 
+@login_required(login_url='admin-login')
 def adminLogout(request):
     logout(request)
     return redirect('admin-login')
@@ -482,6 +507,10 @@ def adminLogout(request):
 
 @login_required(login_url='admin-login')
 def cooperativeDeletion(request, pk):
+    if request.user.is_authenticated:
+        if request.user.group.name != 'CQTSadmin':
+            messages.error(request, "Not admin Account.")
+            return redirect('admin-login')
     cooperative = User.objects.get(id=pk)
     if request.method == 'POST':
         cooperative.delete()
@@ -490,7 +519,12 @@ def cooperativeDeletion(request, pk):
     return render(request, 'base/admin-delete.html', {'obj': cooperative})
 
 
+@login_required(login_url='admin-login')
 def adminExportersRegistration(request):
+    if request.user.is_authenticated:
+        if request.user.group.name != 'CQTSadmin':
+            messages.error(request, "Not admin Account.")
+            return redirect('admin-login')
     if request.method == 'POST':
         exporter_name = request.POST.get('exporter_name')
         location = request.POST.get('district')
@@ -531,8 +565,12 @@ def adminExportersRegistration(request):
         return redirect('admin-manage-exporters')
     return render(request, 'base/admin/admin-exporter-registration.html')
 
-
+@login_required(login_url='admin-login')
 def adminBatchView(request):
+    if request.user.is_authenticated:
+        if request.user.group.name != 'CQTSadmin':
+            messages.error(request, "Not admin Account.")
+            return redirect('admin-login')
     batches = Batch.objects.all()
     context = {'batches': batches}
     return render(request, 'base/admin/admin-view-batches.html', context)

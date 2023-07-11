@@ -19,7 +19,7 @@
             <div class="col-lg-12">
                 <div class="datatable-wrapper">
                     <!-- Table with stripped rows -->
-                    <table class="table datatable table-striped">
+                    <table class="table datatable table-striped" style="text-align: center !important;">
                         <thead>
                             <tr>
                                 <th scope="col">Batch_id</th>
@@ -38,18 +38,42 @@
                         </thead>
                         <tbody>
                             {% for batch in batches %}
-                            <tr style="color: red !important;">
+                            <tr>
                                 <td scope="row">{{batch}}</td>
                                 <td>{{batch.type}}</td>
                                 <td>{{batch.grade}}</td>
                                 <td>{{batch.color}}</td>
                                 <!-- <td>{{batch.cooperative.name}}</td> -->
-                                <td>{{batch.is_approved}}</td>
-                                <td>{{batch.exporter}}</td>
-                                <td>{{batch.sold_to_exporter}}</td>
+                                {% if batch.is_approved == True %}
+                                <td><i class="bi bi-check-circle-fill text-success"></i></td>
+                                {% else %}
+                                <td><i class="bi bi-x-circle-fill text-danger"></i></td>
+                                {% endif %}
+
+                                {% if batch.exporter == None %}
+                                <td>None</td>
+                                {% else %}
+                                 <td>{{batch.exporter.name}}</td>
+                                {% endif %}
+                                 <!-- <td>{{batch.sold_to_exporter}}</td> -->
+                                {% if batch.sold_to_exporter == True %}
+                                <td><i class="bi bi-check-circle-fill text-success"></i></td>
+                                {% else %}
+                                <td><i class="bi bi-x-circle-fill text-danger"></i></td>
+                                {% endif %}
                                 <td>{{batch.date_sold_to_exporter}}</td>
-                                <td>{{batch.buyer}}</td>
-                                <td>{{batch.sold_to_buyer}}</td>
+
+                                {% if batch.buyer == None %}
+                                <td>None</td>
+                                {% else %}
+                                <td>{{batch.buyer.name}}</td>
+                                {% endif %}
+                                <!-- <td>{{batch.sold_to_buyer}}</td> -->
+                                {% if batch.sold_to_buyer == True %}
+                                <td><i class="bi bi-check-circle-fill text-success"></i></td>
+                                {% else %}
+                                <td><i class="bi bi-x-circle-fill text-danger"></i></td>
+                                {% endif %}
                                 <td>{{batch.date_sold_to_buyer}}</td>
                             </tr>
 
