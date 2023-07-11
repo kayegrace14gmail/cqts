@@ -31,7 +31,7 @@
     {% endif %}
 
     <div class="pagetitle">
-        <h1>{{request.user}}</h1>
+        <h1>{{request.user.name}}</h1>
         <br>
         <a href="{% url 'cooperative-farmer-registration' %}" class="btn btn-warning">Register Farmer</a>
         <br>

@@ -49,29 +49,53 @@ def cooperativeHome(request):
             for table in price_table:
                 tab_rows = table.find_all('div', {'class': 'tab-row'})
                 for tab_row in tab_rows:
-                    label = tab_row.find('div', {'class': 'lable'}).text.strip()
-                    price = tab_row.find('div', {'class': 'price-data'}).text.strip()
+                    label = tab_row.find(
+                        'div', {'class': 'lable'}).text.strip()
+                    price = tab_row.find(
+                        'div', {'class': 'price-data'}).text.strip()
                     prices[label] = price
-        # Print the prices 
+        # Print the prices
         # print("Type: US Cents/Lb")
         # for key, value in prices.items():
         #     if key == "Kiboko":
         #         print("Type: Shillings/Kg")
         #     print(f"{key}: {value}")
     cooperative_details = Cooperative.objects.get(cooperative=request.user)
-    farmers = Farmer.objects.filter(cooperative=request.user).count()
-    accepted_batches = Batch.objects.filter(
-        cooperative=request.user, is_approved=True).count()
-    rejected_batches = Batch.objects.filter(
-        cooperative=request.user, is_approved=False).count()
+    farmers = Farmer.objects.filter(cooperative=request.user)
+    total_batches = Batch.objects.filter(cooperative=request.user)
 
+    accepted_batches = Batch.objects.filter(
+        cooperative=request.user, is_approved=True)
+
+    rejected_batches = Batch.objects.filter(
+        cooperative=request.user, is_approved=False)
+
+    exporter_accepted_batches = Batch.objects.filter(
+        cooperative=request.user, is_approved=True, sold_to_exporter=True)
+
+    buyer_accepted_batches = Batch.objects.filter(
+        cooperative=request.user, is_approved=True, sold_to_buyer=True)
+    
+    exporter_acceptance_percentage = ((exporter_accepted_batches.count()/accepted_batches.count()) * 100)
+    exporter_acceptance_percentage = round(exporter_acceptance_percentage, 2)
+    
+    buyer_acceptance_percentage = ((buyer_accepted_batches.count()/total_batches.count()) * 100)
+    buyer_acceptance_percentage = round(buyer_acceptance_percentage, 2)
+
+    
     context = {
-                'accepted_batches': accepted_batches,
-               'rejected_batches': rejected_batches,
-               'farmers': farmers,
-                'prices': prices,
-                'cooperative_details': cooperative_details
-               } 
+        'farmers': farmers,
+        'total_batches': total_batches,
+        'accepted_batches': accepted_batches,
+        'rejected_batches': rejected_batches,
+        'exporter_accepted_batches': exporter_accepted_batches,
+        'buyer_accepted_batches': buyer_accepted_batches,
+        'exporter_acceptance_percentage': exporter_acceptance_percentage,
+        'buyer_acceptance_percentage': buyer_acceptance_percentage,
+        'notification_batches':total_batches[0:4],
+        'prices': prices,
+        'cooperative_details': cooperative_details
+    }
 
     return render(request, 'base/cooperative/cooperative-home.html', context)
 

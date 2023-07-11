@@ -138,7 +138,7 @@ def register_batch(request):
         predicted_class = class_labels[predicted_class]
         predicted_probability = float(predicted_probability)
         #check if moisture content is > 12 and less than 14
-        if predicted_class != 'dark' and serializer.validated_data['moisture_content'] > 12 and serializer.validated_data['moisture_content'] < 14:
+        if predicted_class != 'Dark' and serializer.validated_data['moisture_content'] > 12 and serializer.validated_data['moisture_content'] < 14:
             serializer.validated_data['is_approved'] = True
             # make a double uuid string
             serializer.validated_data['batch_string'] = str(uuid.uuid4()) + str(uuid.uuid4())
