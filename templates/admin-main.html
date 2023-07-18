@@ -56,12 +56,6 @@
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
 
-                <li class="nav-item d-block d-lg-none">
-                    <a class="nav-link nav-icon search-bar-toggle " href="#">
-                        <i class="bi bi-search"></i>
-                    </a>
-                </li><!-- End Search Icon-->
-
                 <li class="nav-item dropdown">
 
                     <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
@@ -71,69 +65,69 @@
 
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
                         <li class="dropdown-header">
-                            You have 4 new notifications
-                            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+                            You are viewing the latest 4 notifications
                         </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-
+                        <!-- for the first four batches -->
+                        {% for batch in notification_batches %}
+                        {% if batch.is_approved == False %}
                         <li class="notification-item">
                             <i class="bi bi-exclamation-circle text-warning"></i>
                             <div>
-                                <h4>Lorem Ipsum</h4>
-                                <p>Quae dolorem earum veritatis oditseno</p>
-                                <p>30 min. ago</p>
+                                <h6>{{ batch.cooperative.name }}/{{ batch }}</h6>
+                                <p>Batch doesnot meet the quality requirements</p>
+                                <p>{{batch.updated_at | timesince}}</p>
                             </div>
                         </li>
-
                         <li>
                             <hr class="dropdown-divider">
                         </li>
 
-                        <li class="notification-item">
-                            <i class="bi bi-x-circle text-danger"></i>
-                            <div>
-                                <h4>Atque rerum nesciunt</h4>
-                                <p>Quae dolorem earum veritatis oditseno</p>
-                                <p>1 hr. ago</p>
-                            </div>
-                        </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
+                        {% elif batch.is_approved == True %}
                         <li class="notification-item">
                             <i class="bi bi-check-circle text-success"></i>
                             <div>
-                                <h4>Sit rerum fuga</h4>
-                                <p>Quae dolorem earum veritatis oditseno</p>
-                                <p>2 hrs. ago</p>
+                                <h6>{{ batch.cooperative.name }}/{{ batch }}</h6>
+                                <p>Batch meets the quality requirements</p>
+                                <p>{{batch.updated_at | timesince}}</p>
                             </div>
                         </li>
-
                         <li>
                             <hr class="dropdown-divider">
                         </li>
 
+                        {% elif batch.sold_to_exporter == True %}
                         <li class="notification-item">
-                            <i class="bi bi-info-circle text-primary"></i>
+                            <i class="bi bi-check-circle text-success"></i>
                             <div>
-                                <h4>Dicta reprehenderit</h4>
-                                <p>Quae dolorem earum veritatis oditseno</p>
-                                <p>4 hrs. ago</p>
+                                <h6>{{ batch }}</h6>
+                                <p>Batch has been sold to an exporter, {{batch.exporter.name}} </p>
+                                <p>{{batch.date_sold_to_exporter | timesince}}</p>
                             </div>
                         </li>
-
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li class="dropdown-footer">
-                            <a href="#">Show all notifications</a>
+
+                        {% elif batch.sold_to_buyer == True %}
+                        <li class="notification-item">
+                            <i class="bi bi-exclamation-circle text-warning"></i>
+                            <div>
+                                <h6>{{ batch }}</h6>
+                                <p>Batch has been sold to buyer, {{batch.buyer.name}} </p>
+                                <p>{{batch.date_sold_to_buyer | timesince}}</p>
+                            </div>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
                         </li>
 
-                    </ul><!-- End Notification Dropdown Items -->
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                    <!-- End Notification Dropdown Items -->
 
                 </li><!-- End Notification Nav -->
 
@@ -180,7 +174,7 @@
                 </a>
             </li><!-- End Dashboard Nav -->        
 
-            <li class="nav-heading">Cooperatives</li>
+            <li class="nav-heading text-white">Cooperatives</li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{% url 'admin-cooperative-registration' %}">
@@ -197,7 +191,7 @@
             </li><!-- End Profile Page Nav -->
 
 
-            <li class="nav-heading">Exporters</li>
+            <li class="nav-heading text-white">Exporters</li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{% url 'admin-exporter-registration' %}">
                     <i class="bi bi-people"></i>
@@ -205,14 +199,14 @@
                 </a>
             </li><!-- End F.A.Q Page Nav -->
 
-            <li class="nav-item">
+            <li class="nav-item text-white">
                 <a class="nav-link collapsed" href="{% url 'admin-manage-exporters' %}">
                     <i class="ri-settings-4-fill"></i>
                     <span>Manage Exporters</span>
                 </a>
             </li>
 
-            <li class="nav-heading">Batches</li>
+            <li class="nav-heading text-white">Batches</li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{% url 'admin-view-batches' %}">
@@ -221,7 +215,7 @@
                 </a>
             </li>
 
-            <li class="nav-heading">Account</li>
+            <li class="nav-heading text-white">Account</li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{% url 'logout-admin' %}">

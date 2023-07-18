@@ -1,0 +1,224 @@
+{% extends 'admin-main.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1 class="text-center">{{ cooperative.name }}</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+        <div class="row">
+
+            <!-- Left side columns -->
+            <div class="col-lg-12">
+                <div class="row">
+
+                    <!-- Accepted Card -->
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card sales-card">
+
+                            <div class="card-body">
+                                <h5 class="card-title">Registered Farmers</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div
+                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-people"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <br />
+                                        <h6>{{farmers.count}}</h6>
+                                        <span class="text-success small pt-1 fw-bold"></span> <span
+                                            class="text-muted small pt-2 ps-1"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Accepted Card -->
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card sales-card">
+
+                            <div class="card-body">
+                                <h5 class="card-title">Total Batches</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div
+                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="ri ri-apps-fill"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <br />
+                                        <h6> {{total_batches.count}}</h6>
+                                        <span class="text-success small pt-1 fw-bold"></span> <span
+                                            class="text-muted small pt-2 ps-1"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Accepted Card -->
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card sales-card">
+
+                            <div class="card-body">
+                                <h5 class="card-title">Approved Batches</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div
+                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-check-lg"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <br />
+                                        <h6>{{accepted_batches.count}}</h6>
+                                        <span class="text-success small pt-1 fw-bold"></span> <span
+                                            class="text-muted small pt-2 ps-1"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- End Accepted Card -->
+
+
+                    <!-- Rejected Card -->
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card revenue-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Disapproved Batches</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div
+                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-x-lg"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <br />
+                                        <h6>{{rejected_batches.count}}</h6>
+                                        <span class="text-success small pt-1 fw-bold"></span> <span
+                                            class="text-muted small pt-2 ps-1"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- End Rejected Card -->
+
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Exporter Accepted Batches</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div
+                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <strong>E</strong> <i class="bi bi-check"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <br />
+                                        <h6>{{exporter_accepted_batches.count}}</h6> <span
+                                            class="text-success small pt-1 fw-bold"></span> <span
+                                            class="text-muted small pt-2 ps-1"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Buyer Accepted Batches</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div
+                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <strong>B</strong> <i class="bi bi-check"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <br />
+                                        <h6>{{buyer_accepted_batches.count}}</h6>
+                                        <span class="text-success small pt-1 fw-bold"></span> <span
+                                            class="text-muted small pt-2 ps-1"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Exporter Acceptance Percentage</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div
+                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <strong>E</strong> <i class="bi bi-percent"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <br />
+                                        <h6>{{exporter_acceptance_percentage}}%</h6> <span
+                                            class="text-success small pt-1 fw-bold"></span> <span
+                                            class="text-muted small pt-2 ps-1"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Buyer Acceptance Percentage</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div
+                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <strong>B</strong> <i class="bi bi-percent"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <br />
+                                        <h6>{{ buyer_acceptance_percentage }}%</h6>
+                                        <span class="text-success small pt-1 fw-bold"></span> <span
+                                            class="text-muted small pt-2 ps-1"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div><!-- End Left side columns -->
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+{% endblock %}
+
+<!-- ======= Footer ======= -->

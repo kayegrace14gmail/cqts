@@ -36,7 +36,7 @@
         <div class="pagetitle">
             <h1>CQTS Admin</h1>
             <p>Cooperatives</p>
-            <a href="{% url 'admin-cooperative-registration' %}" class="btn btn-danger">Register cooperative</a>
+            <a href="{% url 'admin-cooperative-registration' %}" class="btn btn-warning">Register cooperative</a>
             <br>
             <br>
             <h5 class="text-primary inform-expand" id="inform-expand">Click on <i class="bi bi-list"></i> above to enlarge table</h5>
@@ -51,9 +51,10 @@
 
                             <div class="datatable-wrapper">
                                 <!-- Table with stripped rows -->
-                                <table class="table datatable table-striped" style="text-align: center !important;">
+                                <table class="table datatable table-striped">
                                     <thead>
                                         <tr>
+                                            <th scope="col">View</th>
                                             <th scope="col">Name</th>
                                             <th scope="col">District_Subcounty</th>
                                             <th scope="col">Tel</th>
@@ -65,7 +66,9 @@
                                     <tbody>
                                         {% for cooperative in Cooperatives %}
                                         <tr>
-                                            <td scope="row">{{ cooperative.name }}</td>
+                                            <td scope="row"><a href="{% url 'admin-view-cooperative' cooperative.id %}" title="View" class="h5 text-primary"><i
+                                                        class="bi bi-eye-fill"></i></a></td>
+                                            <td>{{ cooperative.name }}</td>
                                             <td>{{ cooperative.location }}</td>
                                             <td>{{ cooperative.phone }}</td>
                                             <td>{{ cooperative.email }}</td>

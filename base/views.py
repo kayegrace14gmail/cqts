@@ -13,6 +13,7 @@ from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse
 import requests
 from bs4 import BeautifulSoup
+import json
 
 
 today = date.today()
@@ -75,14 +76,22 @@ def cooperativeHome(request):
 
     buyer_accepted_batches = Batch.objects.filter(
         cooperative=request.user, is_approved=True, sold_to_buyer=True)
-    
-    exporter_acceptance_percentage = ((exporter_accepted_batches.count()/accepted_batches.count()) * 100)
-    exporter_acceptance_percentage = round(exporter_acceptance_percentage, 2)
-    
-    buyer_acceptance_percentage = ((buyer_accepted_batches.count()/total_batches.count()) * 100)
-    buyer_acceptance_percentage = round(buyer_acceptance_percentage, 2)
 
-    
+    if accepted_batches.count() == 0:
+        exporter_acceptance_percentage = 0
+    else:
+        exporter_acceptance_percentage = (
+            (exporter_accepted_batches.count()/accepted_batches.count()) * 100)
+        exporter_acceptance_percentage = round(
+            exporter_acceptance_percentage, 2)
+
+    if accepted_batches.count() == 0:
+        buyer_acceptance_percentage = 0
+    else:
+        buyer_acceptance_percentage = (
+            (buyer_accepted_batches.count()/accepted_batches.count()) * 100)
+        buyer_acceptance_percentage = round(buyer_acceptance_percentage, 2)
+
     context = {
         'farmers': farmers,
         'total_batches': total_batches,
@@ -92,7 +101,7 @@ def cooperativeHome(request):
         'buyer_accepted_batches': buyer_accepted_batches,
         'exporter_acceptance_percentage': exporter_acceptance_percentage,
         'buyer_acceptance_percentage': buyer_acceptance_percentage,
-        'notification_batches':total_batches[0:4],
+        'notification_batches': total_batches[0:4],
         'prices': prices,
         'cooperative_details': cooperative_details
     }
@@ -210,13 +219,6 @@ def adminHome(request):
     if request.user.group.name != 'CQTSadmin':
         messages.error(request, "Not an admin account.")
         return redirect('admin-login')
-    farmers = Farmer.objects.all().count()
-    cooperatives = User.objects.filter(group_id__name='Cooperative').count()
-    exporters = User.objects.filter(group_id__name='Exporter').count()
-    buyers = User.objects.filter(group_id__name='Buyer').count()
-    accepted_batches = Batch.objects.filter(is_approved=True).count()
-    rejected_batches = Batch.objects.filter(is_approved=False).count()
-
     districts = {
         "Central Region": [
             "Buikwe",
@@ -361,11 +363,38 @@ def adminHome(request):
             "Sheema"
         ]
     }
+#    iterate through the regions and get the number of batches in each district
+    farmers = Farmer.objects.all().count()
+    cooperatives = User.objects.filter(group_id__name='Cooperative').count()
+    exporters = User.objects.filter(group_id__name='Exporter').count()
+    buyers = User.objects.filter(group_id__name='Buyer').count()
+    accepted_batches = Batch.objects.filter(is_approved=True).count()
+    rejected_batches = Batch.objects.filter(is_approved=False).count()
+    notification_batches = Batch.objects.all().order_by('-id')[:4]
+
+
+    region_batches = {}
+    for region, district_list in districts.items():
+        batch_count = 0
+        for district in district_list:
+            batch_count += Batch.objects.filter(
+            cooperative__location__icontains=district, is_approved=True).count()
+        region_batches[region] = batch_count
+
+    region_json = json.dumps(region_batches)
+
+   
     if request.method == 'POST':
         district = request.POST.get('district')
         if district:
             district_cooperatives = User.objects.filter(
                 location__icontains=district, group__name='Cooperative').count()
+            district_farmers = Farmer.objects.filter(
+                cooperative__location__icontains=district).count()
+            district_accepted_batches = Batch.objects.filter(
+                is_approved=True, cooperative__location__icontains=district).count()
+            district_rejected_batches = Batch.objects.filter(
+                is_approved=False, cooperative__location__icontains=district).count()
             context = {
                 'farmers': farmers,
                 'cooperatives':  cooperatives,
@@ -373,8 +402,15 @@ def adminHome(request):
                 'buyers': buyers,
                 'accepted_batches': accepted_batches,
                 'rejected_batches': rejected_batches,
+                'region_json': region_json,
+                'region_batches': region_batches,
                 'districts': districts,
+                'notification_batches': notification_batches,
+                'searched_district': district,
                 'district_cooperatives': district_cooperatives,
+                'district_farmers': district_farmers,
+                'district_accepted_batches': district_accepted_batches,
+                'district_rejected_batches': district_rejected_batches,
             }
             return render(request, 'base/admin/admin-home.html', context)
 
@@ -385,7 +421,10 @@ def adminHome(request):
         'buyers': buyers,
         'accepted_batches': accepted_batches,
         'rejected_batches': rejected_batches,
-        'districts': districts
+        'districts': districts,
+        'region_json': region_json,
+        'notification_batches': notification_batches,
+        'region_batches': region_batches,
     }
     return render(request, 'base/admin/admin-home.html', context)
 
@@ -478,6 +517,7 @@ def adminCooperativesRegistration(request):
         return redirect('admin-manage-cooperatives')
     return render(request, 'base/admin/admin-cooperative-registration.html')
 
+
 @login_required(login_url='admin-login')
 def adminCooperativesView(request):
     if request.user.is_authenticated:
@@ -487,6 +527,7 @@ def adminCooperativesView(request):
     Cooperatives = User.objects.filter(group__name='Cooperative')
     context = {'Cooperatives': Cooperatives}
     return render(request, 'base/admin/admin-manage-cooperatives.html', context)
+
 
 @login_required(login_url='admin-login')
 def adminExportersView(request):
@@ -565,6 +606,7 @@ def adminExportersRegistration(request):
         return redirect('admin-manage-exporters')
     return render(request, 'base/admin/admin-exporter-registration.html')
 
+
 @login_required(login_url='admin-login')
 def adminBatchView(request):
     if request.user.is_authenticated:
@@ -574,6 +616,56 @@ def adminBatchView(request):
     batches = Batch.objects.all()
     context = {'batches': batches}
     return render(request, 'base/admin/admin-view-batches.html', context)
+
+
+@login_required(login_url='admin-login')
+def adminCooperativeView(request, pk):
+    if request.user.is_authenticated:
+        if request.user.group.name != 'CQTSadmin':
+            messages.error(request, "Not admin Account.")
+            return redirect('admin-login')
+    cooperative = User.objects.get(id=pk)
+    farmers = Farmer.objects.filter(cooperative=cooperative)
+    total_batches = Batch.objects.filter(cooperative=cooperative)
+    accepted_batches = Batch.objects.filter(
+        cooperative=cooperative, is_approved='True')
+
+    rejected_batches = Batch.objects.filter(
+        cooperative=cooperative, is_approved='False')
+
+    exporter_accepted_batches = Batch.objects.filter(
+        cooperative=cooperative, is_approved=True, sold_to_exporter=True)
+
+    buyer_accepted_batches = Batch.objects.filter(
+        cooperative=cooperative, is_approved=True, sold_to_buyer=True)
+
+    if accepted_batches.count() == 0:
+        exporter_acceptance_percentage = 0
+    else:
+        exporter_acceptance_percentage = (
+            (exporter_accepted_batches.count()/accepted_batches.count()) * 100)
+        exporter_acceptance_percentage = round(
+            exporter_acceptance_percentage, 2)
+
+    if accepted_batches.count() == 0:
+        buyer_acceptance_percentage = 0
+    else:
+        buyer_acceptance_percentage = (
+            (buyer_accepted_batches.count()/accepted_batches.count()) * 100)
+        buyer_acceptance_percentage = round(buyer_acceptance_percentage, 2)
+
+    context = {
+        'cooperative': cooperative,
+        'farmers': farmers,
+        'total_batches': total_batches,
+        'accepted_batches': accepted_batches,
+        'rejected_batches': rejected_batches,
+        'exporter_accepted_batches': exporter_accepted_batches,
+        'exporter_acceptance_percentage': exporter_acceptance_percentage,
+        'buyer_accepted_batches': buyer_accepted_batches,
+        'buyer_acceptance_percentage': buyer_acceptance_percentage,
+    }
+    return render(request, 'base/admin/admin-view-cooperative.html', context)
 
 # email sending
 

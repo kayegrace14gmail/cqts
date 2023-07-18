@@ -2,6 +2,7 @@
 
 {% block content %}
 {% load static %}
+
 <main id="main" class="main">
 
     <div class="pagetitle">
@@ -139,74 +140,128 @@
                     </div><!-- End Revenue Card -->
 
                     <!-- Customers Card -->
-                    <div class="col-xxl-4 col-xl-12">
+                    <div class="col-xxl-4 col-xl-12 mt-2">
 
                         <div class="card info-card customers-card">
 
-                            <div class="card-body">
-                                <h5 class="card-title">District cooperatives</h5>
-                                <form method="POST" action="{% url 'admin-home' %}" class="form-inline">
-                                    {% csrf_token %}
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control" list="districts" name="district" placeholder="Search District">
-                                        <datalist id="districts">
-                                            {% for region, district_list in districts.items %}
-                                                {% for district in district_list %}
+                            <div class="d-flex justify-content-around">
+                                <div class="1">
+                                    <div class="card-body">
+                                        <h5 class="card-title">District statistics </h5>
+                                        <form method="POST" action="{% url 'admin-home' %}" class="form-inline">
+                                            {% csrf_token %}
+                                            <div class="col-md-12">
+                                                <input type="text" class="form-control" list="districts" name="district"
+                                                    value="{{ searched_district }}" placeholder="Search District">
+                                                <datalist id="districts">
+                                                    {% for region, district_list in districts.items %}
+                                                    {% for district in district_list %}
                                                     <option value="{{ district }}">
-                                                {% endfor %}
-                                            {% endfor %}
-                                        </datalist>
-                                        <input type="submit" class="btn btn-warning form-control mt-2" value="Search">
+                                                        {% endfor %}
+                                                        {% endfor %}
+                                                </datalist>
+                                                <input type="submit" class="btn btn-warning form-control mt-2"
+                                                    value="Search">
+                                            </div>
+                                        </form>
                                     </div>
-                                </form>
 
+                                </div>
 
-                                <div class="d-flex align-items-center mt-3">
-                                    <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-people"></i>
+                                <div class="2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Cooperatives</h6>
+                                            <div class="d-flex align-items-center mt-1">
+                                                <div
+                                                    class="card-icon rounded-circle d-flex align-items-center justify-content-center text-primary">
+                                                    <i class="bi bi-people"></i>
+                                                </div>
+                                                <div class="ps-3">
+                                                    {% if district_cooperatives %}
+                                                    <h6>{{district_cooperatives}}</h6>
+                                                    {% else %}
+                                                    <h6>0</h6>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
                                     </div>
-                                    <div class="ps-3">
-                                        {% if district_cooperatives %}
-                                        <h6>{{district_cooperatives}}</h6>
-                                        {% else %}
-                                        <h6>0</h6>
-                                        {% endif %}
+
+                                </div>
+
+                                <div class="3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Farmers</h6>
+                                            <div class="d-flex align-items-center mt-1">
+                                                <div
+                                                    class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                    <i class="bi bi-people"></i>
+                                                </div>
+                                                <div class="ps-3">
+                                                    {% if district_farmers %}
+                                                    <h6>{{district_farmers}}</h6>
+                                                    {% else %}
+                                                    <h6>0</h6>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
                                     </div>
+
+                                </div>
+
+                                <div class="4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Acc Batches</h6>
+                                            <div class="d-flex align-items-center mt-1">
+                                                <div
+                                                    class="card-icon rounded-circle d-flex align-items-center text-success justify-content-center">
+                                                    <i class="bi bi-bag-check-fill"></i>
+                                                </div>
+                                                <div class="ps-3">
+                                                    {% if district_accepted_batches %}
+                                                    <h6>{{district_accepted_batches}}</h6>
+                                                    {% else %}
+                                                    <h6>0</h6>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="5">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Rej Batches</h6>
+                                            <div class="d-flex align-items-center mt-1">
+                                                <div
+                                                    class="card-icon rounded-circle d-flex align-items-center justify-content-center text-danger">
+                                                    <i class="bi bi-bag-x-fill"></i>
+                                                </div>
+                                                <div class="ps-3">
+                                                    {% if district_rejected_batches %}
+                                                    <h6>{{district_rejected_batches}}</h6>
+                                                    {% else %}
+                                                    <h6>0</h6>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                    </div>
+
                                 </div>
 
                             </div>
+
+
                         </div>
 
-                    </div><!-- End Customers Card -->
+                    </div>
 
-                    <div class="col-xxl-4 col-xl-12">
-
-                        <div class="card info-card customers-card">
-                            <div class="card-body">
-                                <h5 class="card-title">Exporters Registered <span>| This Year</span></h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-people"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <h6>1240</h6>
-                                        <span class="text-danger small pt-1 fw-bold">12%</span> <span
-                                            class="text-muted small pt-2 ps-1">decrease</span>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div><!-- End Customers Card -->
                     <!-- Reports -->
                     <div class="col-12">
                         <div class="card">
-
                             <div class="filter">
                                 <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -221,64 +276,39 @@
                             </div>
 
                             <div class="card-body">
-                                <h5 class="card-title">Reports <span>/Today</span></h5>
-
-                                <!-- Line Chart -->
+                                <h5 class="card-title">Region Statistics <span></span></h5>
+                                
+                                <!-- Pie Chart -->
                                 <div id="reportsChart"></div>
-
                                 <script>
                                     document.addEventListener("DOMContentLoaded", () => {
-                                        new ApexCharts(document.querySelector("#reportsChart"), {
-                                            series: [{
-                                                name: 'Sales',
-                                                data: [31, 40, 28, 51, 42, 82, 56],
-                                            }, {
-                                                name: 'Revenue',
-                                                data: [11, 32, 45, 32, 34, 52, 41]
-                                            }, {
-                                                name: 'Customers',
-                                                data: [15, 11, 32, 18, 9, 24, 11]
-                                            }],
-                                            chart: {
-                                                height: 350,
-                                                type: 'area',
-                                                toolbar: {
-                                                    show: false
-                                                },
+                                        var options = {
+                                            series: [0, 0, 25, 0],
+                                            labels: ['Central Region', 'Eastern Region', 'Northern Region', 'Western Region'],
+                                            chart: { 
+                                                type: 'pie',
+                                                width: 500,
+                                                
                                             },
-                                            markers: {
-                                                size: 4
-                                            },
-                                            colors: ['#4154f1', '#2eca6a', '#ff771d'],
-                                            fill: {
-                                                type: "gradient",
-                                                gradient: {
-                                                    shadeIntensity: 1,
-                                                    opacityFrom: 0.3,
-                                                    opacityTo: 0.4,
-                                                    stops: [0, 90, 100]
+                                            responsive: [{
+                                                breakpoint: 480,
+                                                options: {
+                                                    chart: {
+                                                        width: '100%',
+                                                        height: '100%',
+                                                    },
+                                                    legend: {
+                                                        position: 'bottom',
+                                                    }
                                                 }
-                                            },
-                                            dataLabels: {
-                                                enabled: false
-                                            },
-                                            stroke: {
-                                                curve: 'smooth',
-                                                width: 2
-                                            },
-                                            xaxis: {
-                                                type: 'datetime',
-                                                categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-                                            },
-                                            tooltip: {
-                                                x: {
-                                                    format: 'dd/MM/yy HH:mm'
-                                                },
-                                            }
-                                        }).render();
+                                            }]
+                                        };
+
+                                        new ApexCharts(document.querySelector("#reportsChart"), options).render();
                                     });
                                 </script>
-                                <!-- End Line Chart -->
+
+
 
                             </div>
 

@@ -12,6 +12,7 @@ urlpatterns = [
     path('admin-exporter-registration', views.adminExportersRegistration, name='admin-exporter-registration'),
     path('admin-manage-exporters', views.adminExportersView, name='admin-manage-exporters'),
     path('admin-view-batches', views.adminBatchView, name='admin-view-batches'),
+    path('admin-view-cooperative/<str:pk>/', views.adminCooperativeView, name='admin-view-cooperative'),
     path('cooperative-deletion/<str:pk>/', views.cooperativeDeletion, name = 'admin-delete-cooperative'),
     path('cooperative-login', views.cooperativeLogin, name='cooperative-login'),
     path('cooperative-home', views.cooperativeHome, name='cooperative-home'),
