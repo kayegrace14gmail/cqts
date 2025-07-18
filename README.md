@@ -1,6 +1,6 @@
 # Coffee Quality Tracking System
 
-This repository contains the source code and implementation documents for the Coffee Quality Tracking System. The system consists of a Django web application for the backend, an Android mobile app for image processing AI
+This repository contains the source code and implementation documents for the Coffee Quality Tracking System. The system consists of a Django web application for the backend, an Android mobile app for image processing AI.
 
 ## Overview
 
@@ -25,10 +25,10 @@ The Coffee Quality Tracking System aims to track the consistency of coffee quali
 
 ## Contributors
 
-- LWANGA KAYE GRACE
-- WABWIIRE EDRICK
-- FELIX ALIGUMA
-- MAYAMBALA MARK
+- LWANGA KAYE GRACE.
+- WABWIIRE EDRICK.
+- FELIX ALIGUMA.
+- MAYAMBALA MARK.
 
 ## License
 
